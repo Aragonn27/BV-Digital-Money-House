@@ -38,17 +38,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const newToken = response.token;
       
       console.log('2. Token obtenido:', newToken ? 'SÍ (longitud: ' + newToken.length + ')' : 'NO');
+      console.log('2.1. Token completo:', newToken);
+      
+      // Decodificar y mostrar el payload del token
+      try {
+        const tokenParts = newToken.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        console.log('2.2. Payload del token:', payload);
+      } catch (e) {
+        console.error('Error decodificando token:', e);
+      }
       
       // Guardar token inmediatamente
       setToken(newToken);
       localStorage.setItem('token', newToken);
       
-      // Esperar un momento para que se guarde
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Esperar un momento para que el token se "active" en el servidor
+      console.log('3. Esperando 2 segundos para que el token se active...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Verificar que se guardó
       const savedToken = localStorage.getItem('token');
-      console.log('3. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
+      console.log('3.1. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
       
       // Extraer user_id del token JWT
       try {
