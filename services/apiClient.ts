@@ -15,6 +15,13 @@ export const apiClient = {
   ): Promise<T> {
     const token = customToken || getAuthToken();
     
+    console.log('API Request:', {
+      endpoint,
+      method: options.method || 'GET',
+      hasToken: !!token,
+      tokenPreview: token ? token.substring(0, 20) + '...' : 'none'
+    });
+    
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
@@ -30,6 +37,12 @@ export const apiClient = {
     };
 
     const response = await fetch(`${API_URL}${endpoint}`, config);
+    
+    console.log('API Response:', {
+      endpoint,
+      status: response.status,
+      ok: response.ok
+    });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({

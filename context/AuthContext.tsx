@@ -40,24 +40,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(newToken);
       localStorage.setItem('token', newToken);
       
+      console.log('Token obtenido:', newToken);
+      
       // Cargar datos de la cuenta después del login usando el token
       try {
+        console.log('Intentando cargar cuenta...');
         const account: Account = await authService.getAccount(newToken);
+        console.log('Cuenta cargada:', account);
         localStorage.setItem('account', JSON.stringify(account));
         
         // Cargar datos del usuario usando el user_id de la cuenta
         if (account.user_id) {
+          console.log('Intentando cargar usuario con ID:', account.user_id);
           const user: User = await userService.getUserInfo(account.user_id, newToken);
+          console.log('Usuario cargado:', user);
           localStorage.setItem('user', JSON.stringify(user));
         }
+        
+        router.push('/dashboard');
       } catch (userError) {
-        console.error('Error al cargar datos del usuario:', userError);
-        // No lanzar el error, permitir que el usuario acceda al dashboard
-        // Los datos se cargarán desde UserContext
+        console.error('Error detallado al cargar datos del usuario:', userError);
+        // Redirigir de todos modos pero mostrar el error
+        alert('Error al cargar algunos datos. Por favor, recarga la página.');
+        router.push('/dashboard');
       }
-      
-      router.push('/dashboard');
     } catch (error) {
+      console.error('Error en login:', error);
       throw error;
     }
   };
