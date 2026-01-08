@@ -10,7 +10,7 @@ export const authService = {
     return apiClient.post<void>('/api/users', data);
   },
 
-  async getAccount(): Promise<Account> {
-    return apiClient.get<Account>('/api/account');
+  async getAccount(token?: string): Promise<Account> {
+    return apiClient.get<Account>('/api/account', token);
   },
 };

@@ -34,21 +34,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: LoginRequest) => {
     try {
       const response = await authService.login(credentials);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
+      const newToken = response.token;
       
-      // Cargar datos de la cuenta después del login
+      // Guardar token inmediatamente
+      setToken(newToken);
+      localStorage.setItem('token', newToken);
+      
+      // Cargar datos de la cuenta después del login usando el token
       try {
-        const account: Account = await authService.getAccount();
+        const account: Account = await authService.getAccount(newToken);
         localStorage.setItem('account', JSON.stringify(account));
         
         // Cargar datos del usuario usando el user_id de la cuenta
         if (account.user_id) {
-          const user: User = await userService.getUserInfo(account.user_id);
+          const user: User = await userService.getUserInfo(account.user_id, newToken);
           localStorage.setItem('user', JSON.stringify(user));
         }
       } catch (userError) {
         console.error('Error al cargar datos del usuario:', userError);
+        // No lanzar el error, permitir que el usuario acceda al dashboard
+        // Los datos se cargarán desde UserContext
       }
       
       router.push('/dashboard');

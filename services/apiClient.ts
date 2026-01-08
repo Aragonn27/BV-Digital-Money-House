@@ -10,9 +10,10 @@ export const getAuthToken = (): string | null => {
 export const apiClient = {
   async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    customToken?: string
   ): Promise<T> {
-    const token = getAuthToken();
+    const token = customToken || getAuthToken();
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -48,25 +49,25 @@ export const apiClient = {
     return response.json();
   },
 
-  get<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET' });
+  get<T>(endpoint: string, token?: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET' }, token);
   },
 
-  post<T>(endpoint: string, data?: unknown): Promise<T> {
+  post<T>(endpoint: string, data?: unknown, token?: string): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, token);
   },
 
-  patch<T>(endpoint: string, data?: unknown): Promise<T> {
+  patch<T>(endpoint: string, data?: unknown, token?: string): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PATCH',
       body: data ? JSON.stringify(data) : undefined,
-    });
+    }, token);
   },
 
-  delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+  delete<T>(endpoint: string, token?: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE' }, token);
   },
 };
