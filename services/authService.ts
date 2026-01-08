@@ -11,6 +11,6 @@ export const authService = {
   },
 
   async getAccount(token?: string): Promise<Account> {
-    return apiClient.get<Account>('/api/account', token);
+    return apiClient.get<Account>('/api/accounts', token);
   },
 };

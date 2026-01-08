@@ -11,10 +11,10 @@ export const serviceService = {
   },
 
   async payService(accountId: number, payment: PayServiceRequest): Promise<void> {
-    return apiClient.post<void>(`/api/account/${accountId}/transferences`, payment);
+    return apiClient.post<void>(`/api/accounts/${accountId}/transferences`, payment);
   },
 
   async deposit(accountId: number, deposit: DepositRequest): Promise<void> {
-    return apiClient.post<void>(`/api/account/${accountId}/deposits`, deposit);
+    return apiClient.post<void>(`/api/accounts/${accountId}/deposits`, deposit);
   },
 };
