@@ -1,26 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
 import Card from '@/components/Card/Card';
+import Sidebar from '@/components/Sidebar';
 import Input from '@/components/Input/Input';
 import Button from '@/components/Button/Button';
-import { useState } from 'react';
+import { userService } from '@/services/userService';
 import styles from './page.module.css';
 
 export default function ProfilePage() {
   const { isAuthenticated } = useAuth();
-  const { user, setUser } = useUser();
+  const { user, account, refreshUserData } = useUser();
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditingAlias, setIsEditingAlias] = useState(false);
+  const [profileData, setProfileData] = useState({
     firstname: '',
     lastname: '',
-    email: '',
     phone: '',
   });
+  const [aliasData, setAliasData] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -30,70 +32,114 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      setProfileData({
         firstname: user.firstname || '',
         lastname: user.lastname || '',
-        email: user.email || '',
         phone: user.phone || '',
       });
     }
-  }, [user]);
+    if (account) {
+      setAliasData(account.alias || '');
+    }
+  }, [user, account]);
 
-  const handleSave = async () => {
-    // Aquí iría la lógica para actualizar el perfil
-    setIsEditing(false);
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    
+    try {
+      await userService.updateUserInfo(user.id, profileData);
+      await refreshUserData();
+      setIsEditingProfile(false);
+      alert('Perfil actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar perfil:', error);
+      alert('Error al actualizar el perfil');
+    }
   };
 
-  if (!user) {
-    return <div>Cargando...</div>;
+  const handleSaveAlias = async () => {
+    if (!account) return;
+    
+    // Validar formato X.X.X
+    const aliasParts = aliasData.split('.');
+    if (aliasParts.length !== 3 || aliasParts.some(part => !part.trim())) {
+      alert('El alias debe tener el formato X.X.X (3 palabras separadas por puntos)');
+      return;
+    }
+
+    try {
+      await userService.updateAccountAlias(account.id, aliasData);
+      await refreshUserData();
+      setIsEditingAlias(false);
+      alert('Alias actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar alias:', error);
+      alert('Error al actualizar el alias');
+    }
+  };
+
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert(`${label} copiado al portapapeles`);
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
+  };
+
+  if (!user || !account) {
+    return (
+      <div className={styles.container}>
+        <Sidebar />
+        <div className={styles.content}>
+          <p>Cargando...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Mi Perfil</h1>
+      <Sidebar />
+      <div className={styles.content}>
+        <h1 className={styles.title}>Mi Perfil</h1>
 
-      <Card>
-        <div className={styles.profileHeader}>
-          <div className={styles.avatar}>
-            {user.firstname?.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <h2>{`${user.firstname} ${user.lastname}`}</h2>
-            <p className={styles.email}>{user.email}</p>
-          </div>
-        </div>
-
-        <div className={styles.infoSection}>
-          <h3>Información Personal</h3>
-          
-          {isEditing ? (
+        <Card title="Datos Personales">
+          {isEditingProfile ? (
             <div className={styles.form}>
               <Input
                 label="Nombre"
-                value={formData.firstname}
+                value={profileData.firstname}
                 onChange={(e) =>
-                  setFormData({ ...formData, firstname: e.target.value })
+                  setProfileData({ ...profileData, firstname: e.target.value })
                 }
               />
               <Input
                 label="Apellido"
-                value={formData.lastname}
+                value={profileData.lastname}
                 onChange={(e) =>
-                  setFormData({ ...formData, lastname: e.target.value })
+                  setProfileData({ ...profileData, lastname: e.target.value })
                 }
               />
               <Input
                 label="Teléfono"
-                value={formData.phone}
+                value={profileData.phone}
                 onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
+                  setProfileData({ ...profileData, phone: e.target.value })
                 }
               />
               <div className={styles.actions}>
-                <Button onClick={handleSave}>Guardar</Button>
+                <Button onClick={handleSaveProfile}>Guardar</Button>
                 <Button
                   variant="secondary"
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditingProfile(false);
+                    setProfileData({
+                      firstname: user.firstname || '',
+                      lastname: user.lastname || '',
+                      phone: user.phone || '',
+                    });
+                  }}
                 >
                   Cancelar
                 </Button>
@@ -102,6 +148,18 @@ export default function ProfilePage() {
           ) : (
             <div className={styles.info}>
               <div className={styles.infoRow}>
+                <span className={styles.label}>Nombre:</span>
+                <span>{user.firstname}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Apellido:</span>
+                <span>{user.lastname}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Email:</span>
+                <span>{user.email}</span>
+              </div>
+              <div className={styles.infoRow}>
                 <span className={styles.label}>DNI:</span>
                 <span>{user.dni}</span>
               </div>
@@ -109,11 +167,86 @@ export default function ProfilePage() {
                 <span className={styles.label}>Teléfono:</span>
                 <span>{user.phone}</span>
               </div>
-              <Button onClick={() => setIsEditing(true)}>Editar Perfil</Button>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Contraseña:</span>
+                <span>••••••••</span>
+              </div>
+              <Button onClick={() => setIsEditingProfile(true)}>
+                Editar Datos
+              </Button>
             </div>
           )}
-        </div>
-      </Card>
+        </Card>
+
+        <Card title="Datos de Cuenta">
+          <div className={styles.info}>
+            <div className={styles.infoRow}>
+              <div>
+                <span className={styles.label}>CVU:</span>
+                <span className={styles.cvu}>{account.cvu}</span>
+              </div>
+              <button
+                className={styles.copyButton}
+                onClick={() => copyToClipboard(account.cvu, 'CVU')}
+              >
+                📋 Copiar
+              </button>
+            </div>
+
+            {isEditingAlias ? (
+              <div className={styles.aliasEdit}>
+                <Input
+                  label="Alias (formato: palabra.palabra.palabra)"
+                  value={aliasData}
+                  onChange={(e) => setAliasData(e.target.value)}
+                  placeholder="ejemplo.cuenta.dmh"
+                />
+                <div className={styles.actions}>
+                  <Button onClick={handleSaveAlias}>Guardar Alias</Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setIsEditingAlias(false);
+                      setAliasData(account.alias || '');
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.infoRow}>
+                <div>
+                  <span className={styles.label}>Alias:</span>
+                  <span className={styles.alias}>{account.alias}</span>
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button
+                    className={styles.copyButton}
+                    onClick={() => copyToClipboard(account.alias, 'Alias')}
+                  >
+                    📋 Copiar
+                  </button>
+                  <Button onClick={() => setIsEditingAlias(true)}>
+                    Editar Alias
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+
+        <Card title="Medios de Pago">
+          <div className={styles.info}>
+            <p className={styles.cardsInfo}>
+              Administra tus tarjetas de crédito y débito
+            </p>
+            <Button onClick={() => router.push('/cards')}>
+              Gestionar Medios de Pago
+            </Button>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

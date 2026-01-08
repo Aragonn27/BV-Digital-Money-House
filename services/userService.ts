@@ -13,4 +13,8 @@ export const userService = {
   async updateUserInfo(userId: number, data: Partial<User>): Promise<User> {
     return apiClient.patch<User>(`/api/users/${userId}`, data);
   },
+
+  async updateAccountAlias(accountId: number, alias: string): Promise<Account> {
+    return apiClient.patch<Account>(`/api/account/${accountId}`, { alias });
+  },
 };

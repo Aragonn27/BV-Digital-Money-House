@@ -2,12 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Account } from '@/types';
+import { userService } from '@/services/userService';
 
 interface UserContextType {
   user: User | null;
   account: Account | null;
   setUser: (user: User | null) => void;
   setAccount: (account: Account | null) => void;
+  refreshUserData: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -55,8 +57,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, [account]);
 
+  const refreshUserData = async () => {
+    if (!user || !account) return;
+    
+    try {
+      const [updatedUser, updatedAccount] = await Promise.all([
+        userService.getUserInfo(user.id),
+        userService.getAccountInfo(account.id),
+      ]);
+      setUser(updatedUser);
+      setAccount(updatedAccount);
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, account, setUser, setAccount, isLoading }}>
+    <UserContext.Provider value={{ user, account, setUser, setAccount, refreshUserData, isLoading }}>
       {children}
     </UserContext.Provider>
   );
