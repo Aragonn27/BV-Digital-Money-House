@@ -50,23 +50,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const savedToken = localStorage.getItem('token');
       console.log('3. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
       
-      // Cargar datos de la cuenta después del login
-      // El endpoint /api/account busca la cuenta usando el user_id del JWT
+      // Extraer user_id del token JWT
       try {
-        console.log('4. Intentando cargar cuenta...');
-        const account: Account = await authService.getAccount(newToken);
-        console.log('5. Cuenta cargada exitosamente:', account);
-        localStorage.setItem('account', JSON.stringify(account));
+        const tokenParts = newToken.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const userId = parseInt(payload.username); // El user_id está en el campo "username"
         
-        // Cargar datos del usuario usando el user_id de la cuenta
-        if (account.user_id) {
-          console.log('6. Intentando cargar usuario con ID:', account.user_id);
-          const user: User = await userService.getUserInfo(account.user_id, newToken);
-          console.log('7. Usuario cargado exitosamente:', user);
-          localStorage.setItem('user', JSON.stringify(user));
+        console.log('4. User ID extraído del token:', userId);
+        
+        // Cargar datos del usuario primero
+        console.log('5. Intentando cargar usuario con ID:', userId);
+        const user: User = await userService.getUserInfo(userId, newToken);
+        console.log('6. Usuario cargado exitosamente:', user);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Ahora cargar la cuenta del usuario
+        // Primero intentamos con el endpoint /api/account
+        console.log('7. Intentando cargar cuenta...');
+        try {
+          const account: Account = await authService.getAccount(newToken);
+          console.log('8. Cuenta cargada exitosamente:', account);
+          localStorage.setItem('account', JSON.stringify(account));
+        } catch (accountError: any) {
+          // Si falla /api/account, podemos redirigir igual
+          // El UserContext cargará la cuenta en el dashboard
+          console.log('Advertencia: No se pudo cargar la cuenta, continuando...');
         }
         
-        console.log('8. Redirigiendo a dashboard...');
+        console.log('9. Redirigiendo a dashboard...');
         router.push('/dashboard');
       } catch (userError: any) {
         console.error('ERROR DETALLADO:', {
