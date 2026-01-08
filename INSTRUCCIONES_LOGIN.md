@@ -11,6 +11,7 @@ La aplicación se conecta a la API de Digital House en:
 
 1. Ve a http://localhost:3000/register
 2. Completa el formulario con:
+
    - **Email**: Usa un email único (ej: `tunombre.unico@test.com`)
    - **Contraseña**: Mínimo 8 caracteres, 1 mayúscula, 1 número
    - **Nombre y Apellido**
@@ -30,6 +31,7 @@ La aplicación se conecta a la API de Digital House en:
 ### Credenciales de Prueba (si necesitas)
 
 Puedes crear una cuenta nueva con estos datos:
+
 ```
 Email: test.usuario.digital.2026@gmail.com
 Contraseña: Test1234
@@ -42,14 +44,17 @@ Teléfono: 1234567890
 ## ⚠️ Errores Comunes
 
 ### Error 409 en Registro
+
 - **Causa**: El email ya existe
 - **Solución**: Usa otro email o inicia sesión
 
 ### Error 401 en Login
+
 - **Causa**: Email o contraseña incorrectos
 - **Solución**: Verifica tus credenciales
 
 ### Error al cargar datos del usuario
+
 - **Causa**: Token no válido o expirado
 - **Solución**: Cierra sesión y vuelve a iniciar sesión
 
@@ -66,11 +71,13 @@ Teléfono: 1234567890
 Si tienes problemas:
 
 1. Limpia localStorage:
+
    ```javascript
    localStorage.clear();
    ```
 
 2. Reinicia el servidor:
+
    ```bash
    npm run dev
    ```

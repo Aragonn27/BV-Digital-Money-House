@@ -39,6 +39,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       console.log('2. Token obtenido:', newToken ? 'SÍ (longitud: ' + newToken.length + ')' : 'NO');
       
+      // Decodificar el token JWT para obtener el account_id
+      const tokenParts = newToken.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const accountId = payload.account_id;
+      
+      console.log('3. Account ID extraído del token:', accountId);
+      
       // Guardar token inmediatamente
       setToken(newToken);
       localStorage.setItem('token', newToken);
@@ -48,24 +55,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Verificar que se guardó
       const savedToken = localStorage.getItem('token');
-      console.log('3. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
+      console.log('4. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
       
-      // Cargar datos de la cuenta después del login usando el token
+      // Cargar datos de la cuenta después del login usando el account_id del token
       try {
-        console.log('4. Intentando cargar cuenta con token...');
-        const account: Account = await authService.getAccount(newToken);
-        console.log('5. Cuenta cargada exitosamente:', account);
+        console.log('5. Intentando cargar cuenta con ID:', accountId);
+        const account: Account = await userService.getAccountInfo(accountId, newToken);
+        console.log('6. Cuenta cargada exitosamente:', account);
         localStorage.setItem('account', JSON.stringify(account));
         
         // Cargar datos del usuario usando el user_id de la cuenta
         if (account.user_id) {
-          console.log('6. Intentando cargar usuario con ID:', account.user_id);
+          console.log('7. Intentando cargar usuario con ID:', account.user_id);
           const user: User = await userService.getUserInfo(account.user_id, newToken);
-          console.log('7. Usuario cargado exitosamente:', user);
+          console.log('8. Usuario cargado exitosamente:', user);
           localStorage.setItem('user', JSON.stringify(user));
         }
         
-        console.log('8. Redirigiendo a dashboard...');
+        console.log('9. Redirigiendo a dashboard...');
         router.push('/dashboard');
       } catch (userError: any) {
         console.error('ERROR DETALLADO:', {
