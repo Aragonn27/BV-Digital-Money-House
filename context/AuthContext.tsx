@@ -35,10 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       console.log('1. Iniciando login...');
       const response = await authService.login(credentials);
-      const newToken = response.token;
+      const newToken = response.token.trim(); // Eliminar espacios en blanco
       
       console.log('2. Token obtenido:', newToken ? 'SÍ (longitud: ' + newToken.length + ')' : 'NO');
       console.log('2.1. Token completo:', newToken);
+      console.log('2.2. Token tiene', newToken.split('.').length, 'segmentos (debe ser 3)');
       
       // Decodificar y mostrar el payload del token
       try {
