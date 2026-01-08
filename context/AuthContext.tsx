@@ -3,7 +3,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
-import { LoginRequest, RegisterRequest } from '@/types';
+import { userService } from '@/services/userService';
+import { LoginRequest, RegisterRequest, User, Account } from '@/types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -35,6 +36,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await authService.login(credentials);
       setToken(response.token);
       localStorage.setItem('token', response.token);
+      
+      // Cargar datos de la cuenta después del login
+      try {
+        const account: Account = await authService.getAccount();
+        localStorage.setItem('account', JSON.stringify(account));
+        
+        // Cargar datos del usuario usando el user_id de la cuenta
+        if (account.user_id) {
+          const user: User = await userService.getUserInfo(account.user_id);
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+      } catch (userError) {
+        console.error('Error al cargar datos del usuario:', userError);
+      }
+      
       router.push('/dashboard');
     } catch (error) {
       throw error;

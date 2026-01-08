@@ -7,7 +7,7 @@ export const userService = {
   },
 
   async getAccountInfo(accountId: number): Promise<Account> {
-    return apiClient.get<Account>(`/api/account/${accountId}`);
+    return apiClient.get<Account>(`/api/accounts/${accountId}`);
   },
 
   async updateUserInfo(userId: number, data: Partial<User>): Promise<User> {
@@ -15,6 +15,6 @@ export const userService = {
   },
 
   async updateAccountAlias(accountId: number, alias: string): Promise<Account> {
-    return apiClient.patch<Account>(`/api/account/${accountId}`, { alias });
+    return apiClient.patch<Account>(`/api/accounts/${accountId}`, { alias });
   },
 };

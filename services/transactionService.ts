@@ -13,7 +13,7 @@ export const transactionService = {
     if (filters?.limit) params.append('limit', filters.limit.toString());
 
     const queryString = params.toString();
-    const endpoint = `/api/account/${accountId}/transactions${
+    const endpoint = `/api/accounts/${accountId}/activity${
       queryString ? `?${queryString}` : ''
     }`;
 
@@ -25,7 +25,7 @@ export const transactionService = {
     transactionId: number
   ): Promise<Transaction> {
     return apiClient.get<Transaction>(
-      `/api/account/${accountId}/transactions/${transactionId}`
+      `/api/accounts/${accountId}/transactions/${transactionId}`
     );
   },
 };
