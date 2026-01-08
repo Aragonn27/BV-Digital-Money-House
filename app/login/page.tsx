@@ -59,7 +59,13 @@ export default function LoginPage() {
     try {
       await login({ email, password });
     } catch (error: any) {
-      setApiError(error.message || 'Error al iniciar sesión');
+      if (error.statusCode === 401) {
+        setApiError('Email o contraseña incorrectos');
+      } else if (error.statusCode === 404) {
+        setApiError('Usuario no encontrado. ¿Necesitas registrarte?');
+      } else {
+        setApiError(error.message || 'Error al iniciar sesión. Por favor, intenta nuevamente.');
+      }
     } finally {
       setIsLoading(false);
     }

@@ -84,8 +84,14 @@ export default function RegisterPage() {
         dni: parseInt(formData.dni),
         phone: formData.phone,
       });
+      // Si el registro es exitoso, mostrar mensaje y redirigir
+      alert('Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
     } catch (error: any) {
-      setApiError(error.message || 'Error al registrarse');
+      if (error.statusCode === 409) {
+        setApiError('Este email ya está registrado. Por favor, inicia sesión o usa otro email.');
+      } else {
+        setApiError(error.message || 'Error al registrarse. Por favor, intenta nuevamente.');
+      }
     } finally {
       setIsLoading(false);
     }
