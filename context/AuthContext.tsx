@@ -50,9 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('Error decodificando token:', e);
       }
       
-      // Guardar token inmediatamente
+      // Guardar token inmediatamente en localStorage Y cookies
       setToken(newToken);
       localStorage.setItem('token', newToken);
+      
+      // Guardar en cookies para que el middleware pueda acceder
+      document.cookie = `token=${newToken}; path=/; max-age=${60 * 60 * 24 * 365}`; // 1 año
       
       // Esperar un momento para que el token se "active" en el servidor
       console.log('3. Esperando 2 segundos para que el token se active...');
@@ -61,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Verificar que se guardó
       const savedToken = localStorage.getItem('token');
       console.log('3.1. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
+      console.log('3.2. Token guardado en cookies:', document.cookie.includes('token=') ? 'SÍ' : 'NO');
       
       // Extraer user_id del token JWT
       try {
@@ -124,6 +128,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('account');
+    // Borrar cookie
+    document.cookie = 'token=; path=/; max-age=0';
     router.push('/');
   };
 
