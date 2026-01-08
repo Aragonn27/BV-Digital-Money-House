@@ -7,12 +7,13 @@ import { useRouter } from 'next/navigation';
 import Card from '@/components/Card/Card';
 import Sidebar from '@/components/Sidebar';
 import { transactionService } from '@/services/transactionService';
+import { authService } from '@/services/authService';
 import { Transaction } from '@/types';
 import styles from './page.module.css';
 
 export default function DashboardPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { user, account, isLoading: userLoading } = useUser();
+  const { user, account, setAccount, isLoading: userLoading } = useUser();
   const router = useRouter();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,6 +24,23 @@ export default function DashboardPage() {
       router.push('/login');
     }
   }, [isAuthenticated, authLoading, router]);
+
+  // Cargar cuenta si no está disponible
+  useEffect(() => {
+    const loadAccount = async () => {
+      if (!account && isAuthenticated && !authLoading) {
+        try {
+          console.log('Dashboard: Cargando cuenta...');
+          const accountData = await authService.getAccount();
+          console.log('Dashboard: Cuenta cargada:', accountData);
+          setAccount(accountData);
+        } catch (error) {
+          console.error('Dashboard: Error al cargar cuenta:', error);
+        }
+      }
+    };
+    loadAccount();
+  }, [account, isAuthenticated, authLoading, setAccount]);
 
   useEffect(() => {
     if (account?.id) {

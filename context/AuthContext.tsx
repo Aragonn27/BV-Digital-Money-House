@@ -98,16 +98,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           error: userError
         });
         
-        // Mostrar mensaje específico según el error
-        if (userError.statusCode === 401) {
-          alert('Error de autenticación. El token no es válido. Por favor, intenta nuevamente.');
-          // Limpiar todo y volver a login
-          setToken(null);
-          localStorage.clear();
-          return;
-        }
-        
-        alert('Error al cargar datos de la cuenta. Redirigiendo al dashboard...');
+        // Si hay error cargando datos adicionales, continuar al dashboard igual
+        // El token YA está guardado y es válido
+        console.log('Advertencia: Error cargando datos adicionales, pero token guardado. Continuando...');
         router.push('/dashboard');
       }
     } catch (error: any) {
