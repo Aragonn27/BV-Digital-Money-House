@@ -28,7 +28,8 @@ export const apiClient = {
     };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      // La API de Digital House NO quiere el prefijo "Bearer"
+      headers['Authorization'] = token;
     }
 
     const config: RequestInit = {
