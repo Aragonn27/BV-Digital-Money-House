@@ -61,8 +61,14 @@ export default function AddCardPage() {
       newErrors.cod = 'CVV debe tener 3 o 4 dígitos';
     }
 
-    if (!formData.expiration_date.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
-      newErrors.expiration_date = 'Formato inválido (MM/YY)';
+    if (!formData.expiration_date.match(/^(0[1-9]|1[0-2])\/\d{4}$/)) {
+      newErrors.expiration_date = 'Formato inválido (MM/YYYY)';
+    }
+
+    // Validar que el año empiece con 20
+    const year = formData.expiration_date.split('/')[1];
+    if (year && !year.startsWith('20')) {
+      newErrors.expiration_date = 'El año debe empezar con 20XX';
     }
 
     if (formData.first_last_name.trim().length < 3) {
@@ -114,9 +120,9 @@ export default function AddCardPage() {
   const handleExpirationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length >= 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      value = value.slice(0, 2) + '/' + value.slice(2, 6);
     }
-    if (value.length <= 5) {
+    if (value.length <= 7) {
       setFormData({ ...formData, expiration_date: value });
     }
   };
@@ -175,11 +181,11 @@ export default function AddCardPage() {
 
             <div className={styles.row}>
               <Input
-                label="Fecha de Vencimiento (MM/YY)"
+                label="Fecha de Vencimiento (MM/YYYY)"
                 type="text"
                 value={formData.expiration_date}
                 onChange={handleExpirationChange}
-                placeholder="12/25"
+                placeholder="12/2025"
                 error={errors.expiration_date}
                 required
               />

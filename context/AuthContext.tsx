@@ -94,7 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         console.log('9. Redirigiendo a dashboard...');
-        router.push('/dashboard');
+        // Usar window.location.href para forzar navegación completa
+        window.location.href = '/dashboard';
       } catch (userError: any) {
         console.error('ERROR DETALLADO:', {
           message: userError.message,
