@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Card from '@/components/Card/Card';
 import Sidebar from '@/components/Sidebar';
 import { transactionService } from '@/services/transactionService';
@@ -13,11 +13,14 @@ import styles from './page.module.css';
 
 export default function DashboardPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { user, account, setAccount, isLoading: userLoading } = useUser();
+  const { user, account, setAccount, refreshUserData, isLoading: userLoading } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const refreshParam = searchParams.get('refresh');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loadingTransactions, setLoadingTransactions] = useState(false);
+  const hasRefreshed = useRef(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -43,11 +46,13 @@ export default function DashboardPage() {
   }, [account, isAuthenticated, authLoading, setAccount]);
 
   useEffect(() => {
-    if (account?.id) {
+    if (account?.id && user?.id) {
       loadTransactions();
+      // Refrescar datos del usuario para obtener saldo actualizado
+      refreshUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [account?.id, refreshParam]);
 
   const loadTransactions = async () => {
     if (!account?.id) return;
@@ -56,8 +61,9 @@ export default function DashboardPage() {
     try {
       const data = await transactionService.getTransactions(account.id, { limit: 10 });
       setTransactions(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al cargar transacciones:', error);
+      // No hacer nada más, apiClient ya maneja el 401
     } finally {
       setLoadingTransactions(false);
     }
@@ -128,9 +134,21 @@ export default function DashboardPage() {
             <div className={styles.quickActions}>
               <button
                 className={styles.primaryButton}
-                onClick={() => router.push('/add-money')}
+                onClick={() => {
+                  console.log('Navegando a /deposit');
+                  router.push('/deposit');
+                }}
               >
-                Ingresar Dinero
+                💰 Cargar dinero
+              </button>
+              <button
+                className={styles.primaryButton}
+                onClick={() => {
+                  console.log('Navegando a /pay-services');
+                  router.push('/pay-services');
+                }}
+              >
+                💳 Pagar servicios
               </button>
             </div>
           </Card>

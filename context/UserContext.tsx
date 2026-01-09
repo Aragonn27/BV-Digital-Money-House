@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Account } from '@/types';
 import { userService } from '@/services/userService';
+import { authService } from '@/services/authService';
 
 interface UserContextType {
   user: User | null;
@@ -58,17 +59,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, [account]);
 
   const refreshUserData = async () => {
-    if (!user || !account) return;
+    if (!user) return;
     
     try {
       const [updatedUser, updatedAccount] = await Promise.all([
         userService.getUserInfo(user.id),
-        userService.getAccountInfo(account.id),
+        authService.getAccount(),
       ]);
       setUser(updatedUser);
       setAccount(updatedAccount);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error refreshing user data:', error);
+      // No hacer nada más, apiClient ya maneja el 401
     }
   };
 

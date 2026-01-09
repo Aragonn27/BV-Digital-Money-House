@@ -1,0 +1,168 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.content {
+  margin-left: 280px;
+  flex: 1;
+  padding: var(--spacing-2xl);
+  max-width: 800px;
+}
+
+.backButton {
+  margin-bottom: var(--spacing-lg);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.confirmCard {
+  margin-bottom: var(--spacing-xl);
+}
+
+.detailsSection {
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.value {
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.amountSection {
+  background: linear-gradient(135deg, #2a2929 0%, #1a1a1a 100%);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--primary-color);
+}
+
+.amountRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--border-light);
+}
+
+.amountLabel {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.amountValue {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-color);
+}
+
+.balanceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.balanceLabel {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.balanceValueOk {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-color);
+}
+
+.balanceValueError {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: #ff5252;
+}
+
+.errorBox {
+  background: rgba(255, 82, 82, 0.1);
+  border: 2px solid #ff5252;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.errorText {
+  color: #ff5252;
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: var(--text-base);
+}
+
+.errorSubtext {
+  color: #ff8a80;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+  }
+
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .amountRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

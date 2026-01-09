@@ -1,12 +1,13 @@
 .container {
   display: flex;
   min-height: 100vh;
+  background-color: var(--bg-secondary);
 }
 
 .content {
   margin-left: 280px;
   flex: 1;
-  padding: 2rem;
+  padding: var(--spacing-2xl);
   max-width: 800px;
 }
 
@@ -14,26 +15,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .title {
-  font-size: 2rem;
-  color: #333;
+  font-size: var(--text-3xl);
+  color: var(--text-primary);
   margin: 0;
+  font-weight: var(--font-weight-bold);
 }
 
 .cardTypeIndicator {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--secondary-color) 0%, #3A393E 100%);
+  color: var(--text-white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  border-left: 4px solid var(--primary-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .cardTypeIndicator p {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.cardTypeIndicator p::before {
+  content: '💳';
+  font-size: var(--text-xl);
 }
 
 .form {

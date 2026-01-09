@@ -24,11 +24,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Cargar token desde localStorage al iniciar
+    console.log('AuthContext: Inicializando...');
     const savedToken = localStorage.getItem('token');
+    console.log('AuthContext: Token en localStorage:', savedToken ? 'SÍ (longitud: ' + savedToken.length + ')' : 'NO');
     if (savedToken) {
       setToken(savedToken);
+      console.log('AuthContext: Token cargado en estado');
     }
     setIsLoading(false);
+    console.log('AuthContext: isLoading = false');
   }, []);
 
   const login = async (credentials: LoginRequest) => {
@@ -133,6 +137,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     document.cookie = 'token=; path=/; max-age=0';
     router.push('/');
   };
+
+  console.log('AuthContext render:', {
+    hasToken: !!token,
+    tokenLength: token?.length,
+    isLoading,
+    isAuthenticated: !!token
+  });
 
   return (
     <AuthContext.Provider

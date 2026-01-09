@@ -1,0 +1,128 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.content {
+  margin-left: 280px;
+  flex: 1;
+  padding: var(--spacing-2xl);
+  max-width: 800px;
+}
+
+.backButton {
+  margin-bottom: var(--spacing-lg);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.serviceDetails {
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.value {
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.valueAmount {
+  color: var(--primary-color);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.formSection {
+  margin-top: var(--spacing-lg);
+}
+
+.description {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: var(--spacing-lg);
+}
+
+.infoBox {
+  background: linear-gradient(135deg, #2a2929 0%, #1a1a1a 100%);
+  border-left: 4px solid var(--primary-color);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-xl);
+}
+
+.infoText {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--text-sm);
+}
+
+.infoList {
+  margin-left: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.8;
+}
+
+.infoList li {
+  margin-bottom: var(--spacing-xs);
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+  }
+
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

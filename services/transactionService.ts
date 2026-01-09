@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient';
-import { Transaction, TransactionFilter } from '@/types';
+import { Transaction, TransactionFilter, DepositRequest } from '@/types';
 
 export const transactionService = {
   async getTransactions(
@@ -26,6 +26,16 @@ export const transactionService = {
   ): Promise<Transaction> {
     return apiClient.get<Transaction>(
       `/api/accounts/${accountId}/transactions/${transactionId}`
+    );
+  },
+
+  async createDeposit(
+    accountId: number,
+    depositData: DepositRequest
+  ): Promise<Transaction> {
+    return apiClient.post<Transaction>(
+      `/api/accounts/${accountId}/deposits`,
+      depositData
     );
   },
 };

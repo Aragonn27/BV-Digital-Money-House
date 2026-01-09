@@ -1,0 +1,137 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.content {
+  margin-left: 280px;
+  flex: 1;
+  padding: var(--spacing-2xl);
+  max-width: 1200px;
+}
+
+.title {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.subtitle {
+  font-size: var(--text-xl);
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.description {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+}
+
+.section {
+  margin-top: var(--spacing-2xl);
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: var(--spacing-xl);
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.cardsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.cardItem {
+  background: linear-gradient(135deg, var(--secondary-color) 0%, #3A393E 100%);
+  color: var(--text-white);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.cardItem::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: var(--primary-color);
+  opacity: 0.08;
+  border-radius: 50%;
+}
+
+.cardItem:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cardType {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cardNumber {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 3px;
+  margin: var(--spacing-lg) 0;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  z-index: 1;
+}
+
+.cardInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm);
+  position: relative;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.cardInfo p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding: var(--spacing-lg);
+  }
+
+  .cardsList {
+    grid-template-columns: 1fr;
+  }
+}

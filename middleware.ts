@@ -6,7 +6,7 @@ const protectedRoutes = [
   '/dashboard',
   '/profile',
   '/cards',
-  '/add-money',
+  '/deposit',
   '/activity',
   '/pay-services',
 ];
@@ -40,7 +40,7 @@ export const config = {
     '/dashboard/:path*',
     '/profile/:path*',
     '/cards/:path*',
-    '/add-money/:path*',
+    '/deposit/:path*',
     '/activity/:path*',
     '/pay-services/:path*',
     '/login',

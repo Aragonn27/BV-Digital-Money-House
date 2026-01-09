@@ -1,8 +1,9 @@
 .footer {
-  background-color: var(--secondary-color);
-  color: white;
-  padding: 2rem;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  padding: var(--spacing-xl) var(--spacing-lg);
   margin-top: auto;
+  border-top: 1px solid rgba(193, 253, 53, 0.1);
 }
 
 .container {
@@ -11,18 +12,25 @@
   text-align: center;
 }
 
+.text {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .links {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1rem;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .link {
   color: var(--primary-color);
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-fast);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 .link:hover {

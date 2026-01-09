@@ -49,6 +49,16 @@ export const apiClient = {
       const error = await response.json().catch(() => ({
         message: 'Error en la solicitud',
       }));
+      
+      // Si el token expiró (401), limpiar localStorage y recargar
+      if (response.status === 401) {
+        console.warn('Token expirado, limpiando sesión...');
+        if (typeof window !== 'undefined') {
+          localStorage.clear();
+          window.location.href = '/login';
+        }
+      }
+      
       throw {
         message: error.message || 'Error en la solicitud',
         statusCode: response.status,

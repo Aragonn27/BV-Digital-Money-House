@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.content {
+  margin-left: 280px;
+  flex: 1;
+  padding: var(--spacing-2xl);
+  max-width: 600px;
+  margin-top: var(--spacing-2xl);
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  background: var(--success-color);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-4xl);
+  color: white;
+  margin: 0 auto var(--spacing-lg);
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.title {
+  font-size: var(--text-3xl);
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.details {
+  padding: var(--spacing-md);
+}
+
+.amountSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl) 0;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.amountLabel {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.amount {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--success-color);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.detailRow:last-of-type {
+  border-bottom: none;
+}
+
+.detailLabel {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.detailValue {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    padding: var(--spacing-lg);
+  }
+}

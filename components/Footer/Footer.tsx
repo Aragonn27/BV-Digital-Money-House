@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <p className={styles.text}>
-          © 2022 Digital Money House
+          © 2026 Digital Money House. Todos los derechos reservados.
         </p>
       </div>
     </footer>

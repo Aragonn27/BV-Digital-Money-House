@@ -36,7 +36,10 @@ export default function Sidebar() {
           {menuItems.map((item) => (
             <li key={item.path} className={styles.menuItem}>
               <button
-                onClick={() => router.push(item.path)}
+                onClick={() => {
+                  console.log('Navegando a:', item.path);
+                  router.push(item.path);
+                }}
                 className={styles.menuButton}
               >
                 <span className={styles.icon}>{item.icon}</span>
