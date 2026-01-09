@@ -168,7 +168,7 @@ export default function PayServiceAccountPage() {
           </p>
           <ul className={styles.infoList}>
             <li>Números de cuenta válidos: cualquier número con 8 o más dígitos</li>
-            <li>Números sin facturas pendientes: aquellos que terminan en "00"</li>
+            <li>Números sin facturas pendientes: aquellos que terminan en &quot;00&quot;</li>
           </ul>
         </div>
       </div>
