@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
@@ -9,7 +9,7 @@ import Sidebar from '@/components/Sidebar';
 import Button from '@/components/Button/Button';
 import styles from './page.module.css';
 
-export default function DepositSuccessPage() {
+function DepositSuccessContent() {
   const { isAuthenticated } = useAuth();
   const { refreshUserData } = useUser();
   const router = useRouter();
@@ -80,5 +80,13 @@ export default function DepositSuccessPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function DepositSuccessPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <DepositSuccessContent />
+    </Suspense>
   );
 }

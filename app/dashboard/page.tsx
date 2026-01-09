@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,7 +11,7 @@ import { authService } from '@/services/authService';
 import { Transaction } from '@/types';
 import styles from './page.module.css';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { user, account, setAccount, refreshUserData, isLoading: userLoading } = useUser();
   const router = useRouter();
@@ -212,5 +212,13 @@ export default function DashboardPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
