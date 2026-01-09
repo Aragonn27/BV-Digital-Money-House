@@ -2,52 +2,43 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { useState } from 'react';
 import styles from './Header.module.css';
 
 export default function Header() {
   const { isAuthenticated, logout } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          Digital Money House
+          DMH
         </Link>
 
-        <button
-          className={styles.menuToggle}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
-
-        <nav className={`${styles.nav} ${menuOpen ? styles.open : ''}`}>
+        <nav className={styles.nav}>
           {isAuthenticated ? (
             <>
               <Link href="/dashboard" className={styles.navLink}>
                 Dashboard
               </Link>
-              <Link href="/profile" className={styles.navLink}>
-                Perfil
-              </Link>
-              <Link href="/activity" className={styles.navLink}>
-                Actividad
-              </Link>
-              <button onClick={logout} className={styles.button}>
+              <button onClick={logout} className={styles.logoutButton}>
                 Cerrar Sesión
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className={styles.navLink}>
+              <Link href="/login" className={styles.loginButton}>
                 Ingresar
               </Link>
-              <Link href="/register">
-                <button className={styles.button}>Crear Cuenta</button>
+              <Link href="/register" className={styles.registerButton}>
+                Crear cuenta
               </Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
             </>
           )}
         </nav>

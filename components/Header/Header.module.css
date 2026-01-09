@@ -1,8 +1,6 @@
 .header {
   background-color: var(--secondary-color);
-  color: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 2rem;
 }
 
 .container {
@@ -14,74 +12,97 @@
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent);
   text-decoration: none;
+  letter-spacing: 2px;
 }
 
 .logo:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
 }
 
 .navLink {
-  color: var(--color-accent);
+  color: white;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
 }
 
 .navLink:hover {
-  color: var(--color-primary);
+  color: var(--color-accent);
 }
 
-.button {
-  background-color: var(--color-primary);
-  color: var(--gray-900);
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+.loginButton {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.loginButton:hover {
+  background-color: var(--color-accent);
+  color: var(--secondary-color);
+}
+
+.registerButton {
+  background-color: var(--color-accent);
+  color: var(--secondary-color);
+  border: 2px solid var(--color-accent);
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.registerButton:hover {
+  background-color: #a8d929;
+  border-color: #a8d929;
+}
+
+.logoutButton {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 }
 
-.button:hover {
-  background-color: #333;
-}
-
-.menuToggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
+.logoutButton:hover {
+  background-color: var(--color-accent);
+  color: var(--secondary-color);
 }
 
 @media (max-width: 768px) {
-  .menuToggle {
-    display: block;
-  }
-
   .nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #C1FD35;
-    flex-direction: column;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 1rem;
   }
 
-  .nav.open {
-    display: flex;
+  .loginButton,
+  .registerButton,
+  .logoutButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
   }
 }
