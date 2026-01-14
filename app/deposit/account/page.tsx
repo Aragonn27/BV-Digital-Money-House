@@ -4,21 +4,39 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
+import { authService } from '@/services/authService';
 import Card from '@/components/Card/Card';
 import Sidebar from '@/components/Sidebar';
 import Button from '@/components/Button/Button';
 import styles from './page.module.css';
 
 export default function DepositFromAccountPage() {
-  const { isAuthenticated } = useAuth();
-  const { account } = useUser();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { account, setAccount, isLoading: userLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, authLoading, router]);
+
+  // Cargar cuenta si no está disponible
+  useEffect(() => {
+    const loadAccount = async () => {
+      if (!account && isAuthenticated && !authLoading && !userLoading) {
+        try {
+          console.log('DepositFromAccountPage: Cargando cuenta...');
+          const accountData = await authService.getAccount();
+          console.log('DepositFromAccountPage: Cuenta cargada:', accountData);
+          setAccount(accountData);
+        } catch (error) {
+          console.error('DepositFromAccountPage: Error al cargar cuenta:', error);
+        }
+      }
+    };
+    loadAccount();
+  }, [account, isAuthenticated, authLoading, userLoading, setAccount]);
 
   const copyToClipboard = async (text: string, label: string) => {
     try {
@@ -30,7 +48,8 @@ export default function DepositFromAccountPage() {
     }
   };
 
-  if (!account) {
+  // Mostrar cargando mientras se inicializan los contextos
+  if (authLoading || userLoading || !account) {
     return (
       <div className={styles.container}>
         <Sidebar />

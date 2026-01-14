@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import Card from '@/components/Card/Card';
@@ -10,13 +10,28 @@ import { isValidEmail } from '@/utils/validations';
 import styles from './page.module.css';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const [step, setStep] = useState<1 | 2>(1); // Paso 1: email, Paso 2: contraseña
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [hasOldSession, setHasOldSession] = useState(false);
+
+  useEffect(() => {
+    // Verificar si hay un token en localStorage (sesión previa)
+    const token = localStorage.getItem('token');
+    if (token) {
+      setHasOldSession(true);
+    }
+  }, []);
+
+  const handleClearSession = () => {
+    logout();
+    setHasOldSession(false);
+    setApiError('');
+  };
 
   const validateEmail = () => {
     if (!email) {
@@ -74,6 +89,15 @@ export default function LoginPage() {
   return (
     <div className={styles.container}>
       <Card title={step === 1 ? "Iniciar Sesión" : "Ingresa tu contraseña"}>
+        {hasOldSession && (
+          <div className={styles.warning}>
+            <p>⚠️ Detectamos una sesión anterior. Si tienes problemas para iniciar sesión, prueba limpiar tu sesión.</p>
+            <Button variant="secondary" onClick={handleClearSession} fullWidth>
+              Limpiar sesión anterior
+            </Button>
+          </div>
+        )}
+        
         {apiError && <div className={styles.error}>{apiError}</div>}
         
         {step === 1 ? (

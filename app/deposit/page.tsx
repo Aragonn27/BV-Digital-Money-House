@@ -8,28 +8,49 @@ import Card from '@/components/Card/Card';
 import Sidebar from '@/components/Sidebar';
 import Button from '@/components/Button/Button';
 import { cardService } from '@/services/cardService';
+import { authService } from '@/services/authService';
 import { Card as CardType } from '@/types';
 import styles from './page.module.css';
 
 export default function DepositPage() {
-  const { isAuthenticated } = useAuth();
-  const { account } = useUser();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { account, setAccount, isLoading: userLoading } = useUser();
   const router = useRouter();
   const [cards, setCards] = useState<CardType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   console.log('DepositPage renderizado:', {
     isAuthenticated,
+    authLoading,
+    userLoading,
     accountId: account?.id,
     hasAccount: !!account
   });
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log('No autenticado, redirigiendo a /login');
+    // Solo redirigir si ya terminó de cargar y no está autenticado
+    if (!authLoading && !isAuthenticated) {
+      console.log('No autenticado después de cargar, redirigiendo a /login');
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, authLoading, router]);
+
+  // Cargar cuenta si no está disponible (igual que en dashboard)
+  useEffect(() => {
+    const loadAccount = async () => {
+      if (!account && isAuthenticated && !authLoading && !userLoading) {
+        try {
+          console.log('DepositPage: Cargando cuenta...');
+          const accountData = await authService.getAccount();
+          console.log('DepositPage: Cuenta cargada:', accountData);
+          setAccount(accountData);
+        } catch (error) {
+          console.error('DepositPage: Error al cargar cuenta:', error);
+        }
+      }
+    };
+    loadAccount();
+  }, [account, isAuthenticated, authLoading, userLoading, setAccount]);
 
   useEffect(() => {
     console.log('useEffect de loadCards, account:', account?.id);
@@ -79,12 +100,25 @@ export default function DepositPage() {
     return `•••• ${numberStr.slice(-4)}`;
   };
 
-  if (!account) {
+  // Mostrar cargando mientras se inicializan los contextos
+  if (authLoading || userLoading) {
     return (
       <div className={styles.container}>
         <Sidebar />
         <div className={styles.content}>
           <p>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si ya cargó pero no hay cuenta, mostrar error
+  if (!account) {
+    return (
+      <div className={styles.container}>
+        <Sidebar />
+        <div className={styles.content}>
+          <p>No se pudo cargar la información de la cuenta. Por favor, intenta nuevamente.</p>
         </div>
       </div>
     );

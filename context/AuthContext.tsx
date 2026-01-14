@@ -61,14 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Guardar en cookies para que el middleware pueda acceder
       document.cookie = `token=${newToken}; path=/; max-age=${60 * 60 * 24 * 365}`; // 1 año
       
-      // Esperar un momento para que el token se "active" en el servidor
-      console.log('3. Esperando 2 segundos para que el token se active...');
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
       // Verificar que se guardó
       const savedToken = localStorage.getItem('token');
-      console.log('3.1. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
-      console.log('3.2. Token guardado en cookies:', document.cookie.includes('token=') ? 'SÍ' : 'NO');
+      console.log('3. Token guardado en localStorage:', savedToken ? 'SÍ' : 'NO');
+      console.log('3.1. Token guardado en cookies:', document.cookie.includes('token=') ? 'SÍ' : 'NO');
       
       // Extraer user_id del token JWT
       try {
@@ -110,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Si hay error cargando datos adicionales, continuar al dashboard igual
         // El token YA está guardado y es válido
         console.log('Advertencia: Error cargando datos adicionales, pero token guardado. Continuando...');
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       }
     } catch (error: any) {
       console.error('Error en login:', error);

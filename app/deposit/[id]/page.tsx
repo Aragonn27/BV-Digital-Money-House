@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from '@/context/UserContext';
+import { authService } from '@/services/authService';
 import Card from '@/components/Card/Card';
 import Sidebar from '@/components/Sidebar';
 import Input from '@/components/Input/Input';
@@ -14,8 +15,8 @@ import { Card as CardType } from '@/types';
 import styles from './page.module.css';
 
 export default function DepositWithCardPage() {
-  const { isAuthenticated } = useAuth();
-  const { account, refreshUserData } = useUser();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { account, setAccount, refreshUserData, isLoading: userLoading } = useUser();
   const router = useRouter();
   const params = useParams();
   const cardId = params.id as string;
@@ -27,10 +28,27 @@ export default function DepositWithCardPage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, authLoading, router]);
+
+  // Cargar cuenta si no está disponible
+  useEffect(() => {
+    const loadAccount = async () => {
+      if (!account && isAuthenticated && !authLoading && !userLoading) {
+        try {
+          console.log('DepositWithCardPage: Cargando cuenta...');
+          const accountData = await authService.getAccount();
+          console.log('DepositWithCardPage: Cuenta cargada:', accountData);
+          setAccount(accountData);
+        } catch (error) {
+          console.error('DepositWithCardPage: Error al cargar cuenta:', error);
+        }
+      }
+    };
+    loadAccount();
+  }, [account, isAuthenticated, authLoading, userLoading, setAccount]);
 
   useEffect(() => {
     if (account?.id && cardId) {

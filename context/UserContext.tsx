@@ -25,14 +25,27 @@ export function UserProvider({ children }: { children: ReactNode }) {
     // Cargar datos del usuario desde localStorage si existen
     const loadUserData = () => {
       try {
+        console.log('UserContext: Cargando datos desde localStorage...');
         const savedUser = localStorage.getItem('user');
         const savedAccount = localStorage.getItem('account');
         
-        if (savedUser) setUser(JSON.parse(savedUser));
-        if (savedAccount) setAccount(JSON.parse(savedAccount));
+        console.log('UserContext: savedUser:', savedUser ? 'SÍ' : 'NO');
+        console.log('UserContext: savedAccount:', savedAccount ? 'SÍ' : 'NO');
+        
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          console.log('UserContext: Usuario cargado:', parsedUser);
+          setUser(parsedUser);
+        }
+        if (savedAccount) {
+          const parsedAccount = JSON.parse(savedAccount);
+          console.log('UserContext: Cuenta cargada:', parsedAccount);
+          setAccount(parsedAccount);
+        }
       } catch (error) {
         console.error('Error loading user data:', error);
       } finally {
+        console.log('UserContext: isLoading = false');
         setIsLoading(false);
       }
     };

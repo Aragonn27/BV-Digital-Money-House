@@ -52,9 +52,11 @@ export const apiClient = {
       
       // Si el token expiró (401), limpiar localStorage y recargar
       if (response.status === 401) {
-        console.warn('Token expirado, limpiando sesión...');
+        console.warn('Token expirado o inválido, limpiando sesión...');
         if (typeof window !== 'undefined') {
           localStorage.clear();
+          // Borrar cookie de token
+          document.cookie = 'token=; path=/; max-age=0';
           window.location.href = '/login';
         }
       }
